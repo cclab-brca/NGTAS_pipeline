@@ -7,9 +7,12 @@ The pipeline is divided in two parts:
 1.	Alignment and bam annotation. Set up to run for a group of demultiplexed fastq files as an array job. Each job will process a pair of files (read1 and read2 fastq) from a single replicate of a single sample. The pipeline will align the data and assign each pair to the amplicon they belong to, enabling the subsequent per-amplicon analyses. Two versions of the pipeline are available, using either Novoalign (1a) or BWA-MEM (1b) as aligners. 
 In both cases, the first session of the script contains all the configuration commands that should be set by the user. In particular:
 
-a)	Working directory, where all the needed subfolders will be created. It MUST contain a 'fastq' subfolder with the fastq files to be processed
+a)	Working directory, where all the needed subfolders will be created. It MUST contain a 'fastq' subfolder with the fastq files to be processed.
+
 b)	Path to all required software. This include: Novoalign/Novosort (v. 3) (or BWA-MEM v. 0.7.17), Samtools (v. 1.8), GATK (v. 3.6), Picard (v. 2.17), Java (v. 1.8), AnnotateBam and Amplistats java tools (provided).
+
 c)	Path to required files. The files describing the 377 amplicons used in the paper are provided. They can be used as example to describe any set of amplicons. Reference genome is not provided.
+
 d)	Other info and parameters like the ARRAY_ID and the number of nodes (N_NODES) typically acquired as environmental variable (e.g. SLURM_ARRAY_TASK_ID and SLURM_JOB_NUM_NODES in a Slurm HPC).
 
 Please note that LIBRARY, BARCODE, FLOWCELL and LANE are extracted from the file name. If the filename structure is different, this part of the code has to be modified accordingly.
@@ -20,7 +23,9 @@ Output: 1) a filtered and annotated bam file; 2) two or three reports containing
 The first session of the script contains all the configuration commands that should be set by the user. In particular:
 
 a)	Working directory, same as in part 1.
+
 b)	Path to all required software. This include: Java (v. 1.8), Samtools (v. 1.8), GATK (v. 3.6), Picard (v. 2.17), Bedtools (v. 2.27), bcftools (v. 1.9), bgzip (included in HTSlib, v.1.8), Annovar (including annotation databases refGene, cytoBand, genomicSuperDups, esp6500siv2_all, snp138, ljb26_all), R (v. 3.5 with the package ‘VariantAnnotation’ installed).
+
 c)	Path to required files. These include the amplicon description files similarly to part 1 (but excluding the primer regions) plus a set of R scripts (provided) and the pairs_for_mutation_calling.txt spreadsheet.
 This spreadsheet must contain 8 columns with the following info:
 •	Tumour/Plasma replicate file name (without extension)
@@ -32,6 +37,7 @@ This spreadsheet must contain 8 columns with the following info:
 •	Study name (can be blank, not used by the pipeline)
 •	DNA source (it is important that it is specified as ‘FFPE’ to enable the specific C>T/G>A filter in FFPE samples
 An example spreadsheet to analyse the set of example raw data is provided.
+
 d)	Other info and parameters like the ARRAY_ID and the number of nodes (N_NODES) typically acquired as environmental variable (e.g. SLURM_ARRAY_TASK_ID and SLURM_JOB_NUM_NODES in a Slurm HPC). The user can also specify the desired thresholds for the following mutation filtering parameters:
 •	vaf_th_norm: max VAF for the alternative allele in the normal sample
 •	vaf_th_tum: min VAF to call a somatic mutation
